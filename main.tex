@@ -1,0 +1,78 @@
+\documentclass[11pt]{article}
+
+\usepackage[a4paper,margin=0.7in]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish]{babel}
+\usepackage{amsmath, amssymb}
+\usepackage{enumitem}
+\usepackage{extramarks}
+\usepackage{url}
+\usepackage{graphicx}
+\usepackage{fancyhdr}
+\usepackage{xcolor}
+\geometry{a4paper}
+
+\graphicspath{{img}}
+
+\newcounter{problemCounter}
+% \setcounter{problemCounter}{1}
+
+\newenvironment{problem}[1][-1]{
+  \ifnum#1>0
+    \setcounter{problemCounter}{#1}
+  \else 
+    \refstepcounter{problemCounter}
+  \fi
+  \noindent
+  \textbf{\arabic{problemCounter}) }
+}{}
+
+
+\title{Nivel de Aplicaciones y de
+Transporte del Modelo TCP/IP}	% Titulo del trabajo.
+\author{Alan Romero}			% Nombre y apellido
+\newcommand{\padron}{108316}    % Padrón
+\newcommand{\tpnumber}{1}       % Número de trabajo práctico
+\date{\today}					% Fecha (automática, no tocar)
+
+\makeatletter
+\let\thetitle\@title
+\let\theauthor\@author
+\let\thedate\@date
+\makeatother
+
+% \pagestyle{fancy}
+% \fancyhf{}
+% \rhead{\theauthor}
+% \lhead{\thetitle}
+% \cfoot{\thepage}
+
+
+\begin{document}
+\begin{titlepage}
+    \includegraphics[scale = 0.71]{logofiuba.png}\\[.5 cm]	    % Logo fiuba
+    \centering
+	\textsc{\Large TB067}\\[0.2 cm]
+	\textsc{\large Redes de Comunicaciones}\\[7 cm]
+	\textcolor{cyan}{{\fontsize{35.83}{60}\selectfont \bfseries \thetitle}}\\[0.5cm]
+	{ \Large \bfseries Trabajo Práctico N$^\circ$\tpnumber}\\[7cm]
+	
+	
+    \noindent\makebox[\linewidth]{\rule{\textwidth}{0.4pt}}\\[0.5cm]
+    \begin{minipage}{.4\textwidth}
+    \textbf{Autor}:\\
+	Alan Romero \\	Ezequiel
+    \end{minipage}%
+    \begin{minipage}{.4\textwidth}
+    \textbf{Padrón}:\\
+    108316 \\ XXXXXX
+    \end{minipage}%
+    \begin{minipage}{.2\textwidth}
+    \textbf{Fecha}:\\
+    \thedate \\
+    \end{minipage}
+	\vfill
+\end{titlepage}
+
+\end{document}
