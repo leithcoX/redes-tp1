@@ -10,7 +10,7 @@
 \usepackage{url}
 \usepackage{graphicx}
 \usepackage{fancyhdr}
-\usepackage{xcolor}
+\usepackage[dvipsnames]{xcolor}
 \geometry{a4paper}
 
 \graphicspath{{img}}
@@ -74,5 +74,25 @@ Transporte del Modelo TCP/IP}	% Titulo del trabajo.
     \end{minipage}
 	\vfill
 \end{titlepage}
+
+\section{Actividades}\label{sec:actividades} % (fold)
+\begin{problem}
+    Se vinculan los siguientes conceptos:
+	\begin{enumerate}
+        \item \textbf{gRPC}: Marco de trabajo para implementar llamadas  a procedimientos remotos.
+        \item \textbf{ HTTP/2}: Protocolo de aplicación que permite  multiplexación de múltiples flujos sobre una  única conexión.
+        \item \textbf{Transmission Control Protocol (TCP)}: Protocolo de transporte confiable y  full-duplex sobre el cual se establece la  conexión.
+        \item \textbf{Stream}: Serialización binaria compacta definida  mediante archivos {\color{ForestGreen}\texttt{.proto}}
+        \item \textbf{Channel}: Flujo independiente de datos dentro de una  conexión multiplexada.
+            % Creo que Stream y Channel están al revés
+        \item \textbf{Protocol Buffers}: Conexión lógica que agrupa múltiples  llamadas RPC sobre una misma conexión física.
+        \item \textbf{StatusCode}: Código que indica éxito o tipo de error en una  llamada remota.
+        \item \textbf{Unary RPC}: Tipo de llamada que envía un único request  y recibe una única respuesta.
+        \item \textbf{Bidirectional Streaming RPC}:  Tipo de llamada donde cliente y servidor  pueden enviarse múltiples mensajes sin orden  predefinido.
+        \item \textbf{Deadline}: Límite de tiempo máximo permitido para que  una llamada RPC finalice.
+
+	\end{enumerate}
+\end{problem}
+% section Actividades (end)
 
 \end{document}
