@@ -95,4 +95,20 @@ Transporte del Modelo TCP/IP}	% Titulo del trabajo.
 \end{problem}
 % section Actividades (end)
 
+
+\begin{problem}[3]
+    \begin{enumerate}[label=\alph*.]
+        \item La interfaz que muestra actividad con el cliente/servidor en Wireshark es Loopback/lo.
+        Dadas la optimizaciones del kernel, aunque se configure un puerto e IP para la interfaz de red, el tráfico sigue yendo por loopback.
+
+        \begin{figure}[h]
+            \centering
+            \includegraphics[width=1 \textwidth]{3a}
+            \caption{Captura del tráfico en la interfaz loopback.}
+            \label{fig:3a}
+        \end{figure}
+
+        Como se observa en la figura~\ref{fig:3a}, la interfaz es Loopback, aunque en el código se configuró la IP de la interfaz local WIFI.
+
+
 \end{document}
