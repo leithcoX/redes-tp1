@@ -111,4 +111,49 @@ Transporte del Modelo TCP/IP}	% Titulo del trabajo.
         Como se observa en la figura~\ref{fig:3a}, la interfaz es Loopback, aunque en el código se configuró la IP de la interfaz local WIFI.
 
 
+        \item Se puede utilizar tanto IPv4 como Ipv6.
+            Para realizar este ajuste, se configura al llamar a la función, pasándole por parámetro la IP en el formato de la versión que se desee.
+
+            \begin{itemize}
+                \item Para IPv4
+
+                    \texttt{grpc.insecure\_channel('192.168.0.5:50051')}
+
+                    \texttt{server.add\_insecure\_port('192.168.0.5:50051')}
+
+                \item Para IPv6
+
+                    \texttt{grpc.insecure\_channel('[::1]:50051')}
+
+                    \texttt{server.add\_insecure\_port('[::1]:50051')}
+            \end{itemize}
+
+            \begin{figure}[h]
+                \centering
+                \includegraphics[width=.8 \textwidth]{3b}
+                \caption{}
+                \label{fig:3b}
+            \end{figure}
+
+        \item Para los ítems anteriores, se configuraron los puertos 8080 y 50051.
+            No existen puertos estandar de la IANA para gRPC.
+
+        \item Al ejecutar el servidor en varias ventanas a la vez, cuando se reciben varias peticiones de clientes, se asigna a un servidor para atender la petición.
+            \begin{figure}[h]
+                \centering
+                \includegraphics[width=.8 \textwidth]{3d}
+                \caption{}
+                \label{fig:3d}
+            \end{figure}
+
+            Al crear el servidor asignando el mismo puerto \texttt{server.add\_insecure\_port('[::1]:50051')}, se utiliza el parámetro SO\_REUSEPORT, que permite que varios procesos utilicen el mismo puerto. % REDACTAR MEJOR
+            El kernel distribuye la carga por lo que, no siempre el mismo servidor atenderá la petición del mismo cliente.
+            
+            No se observa tráfico estpecífico entre el cliente y los distintos servidores.
+            Es indistinto si hay uno como si hay varios.
+
+            argumentar argumentar argumentar argumentar argumentar argumentar argumentar argumentar argumentar argumentar argumentar argumentar argumentar argumentar argumentar argumentar argumentar argumentar argumentar argumentar argumentar argumentar argumentar argumentar argumentar argumentar argumentar argumentar argumentar argumentar argumentar argumentar argumentar argumentar argumentar argumentar argumentar argumentar argumentar argumentar 
+    \end{enumerate}
+\end{problem}
+
 \end{document}
