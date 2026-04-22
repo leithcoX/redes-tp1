@@ -62,11 +62,11 @@ Transporte del Modelo TCP/IP}	% Titulo del trabajo.
     \noindent\makebox[\linewidth]{\rule{\textwidth}{0.4pt}}\\[0.5cm]
     \begin{minipage}{.4\textwidth}
     \textbf{Autor}:\\
-	Alan Romero \\	Ezequiel
+	Alan Romero \\	Ezequiel Fernandez
     \end{minipage}%
     \begin{minipage}{.4\textwidth}
     \textbf{Padrón}:\\
-    108316 \\ XXXXXX
+    108316 \\ 107186
     \end{minipage}%
     \begin{minipage}{.2\textwidth}
     \textbf{Fecha}:\\
@@ -82,10 +82,9 @@ Transporte del Modelo TCP/IP}	% Titulo del trabajo.
         \item \textbf{gRPC}: Marco de trabajo para implementar llamadas  a procedimientos remotos.
         \item \textbf{ HTTP/2}: Protocolo de aplicación que permite  multiplexación de múltiples flujos sobre una  única conexión.
         \item \textbf{Transmission Control Protocol (TCP)}: Protocolo de transporte confiable y  full-duplex sobre el cual se establece la  conexión.
-        \item \textbf{Stream}: Serialización binaria compacta definida  mediante archivos {\color{ForestGreen}\texttt{.proto}}
-        \item \textbf{Channel}: Flujo independiente de datos dentro de una  conexión multiplexada.
-            % Creo que Stream y Channel están al revés
-        \item \textbf{Protocol Buffers}: Conexión lógica que agrupa múltiples  llamadas RPC sobre una misma conexión física.
+        \item \textbf{Stream}: Flujo independiente de datos dentro de una  conexión multiplexada.
+        \item \textbf{Channel}: Conexión lógica que agrupa múltiples  llamadas RPC sobre una misma conexión física.
+        \item \textbf{Protocol Buffers}: Serialización binaria compacta definida  mediante archivos {\color{ForestGreen}\texttt{.proto}}
         \item \textbf{StatusCode}: Código que indica éxito o tipo de error en una  llamada remota.
         \item \textbf{Unary RPC}: Tipo de llamada que envía un único request  y recibe una única respuesta.
         \item \textbf{Bidirectional Streaming RPC}:  Tipo de llamada donde cliente y servidor  pueden enviarse múltiples mensajes sin orden  predefinido.
@@ -108,7 +107,7 @@ Transporte del Modelo TCP/IP}	% Titulo del trabajo.
             \label{fig:3a}
         \end{figure}
 
-        Como se observa en la figura~\ref{fig:3a}, la interfaz es Loopback, aunque en el código se configuró la IP de la interfaz local WIFI.
+        % Como se observa en la figura~\ref{fig:3a}, la interfaz es Loopback, aunque en el código se configuró la IP de la interfaz local WIFI.
 
 
         \item Se puede utilizar tanto IPv4 como Ipv6.
@@ -131,18 +130,18 @@ Transporte del Modelo TCP/IP}	% Titulo del trabajo.
             \begin{figure}[h]
                 \centering
                 \includegraphics[width=.8 \textwidth]{3b}
-                \caption{}
+                \caption{Se observa en las columna \textit{Source} y \textit{Destination} el cambio de IPv4 a IPv6.}
                 \label{fig:3b}
             \end{figure}
 
         \item Para los ítems anteriores, se configuraron los puertos 8080 y 50051.
-            No existen puertos estandar de la IANA para gRPC.
+            No existen puertos estándar de la IANA para gRPC.
 
         \item Al ejecutar el servidor en varias ventanas a la vez, cuando se reciben varias peticiones de clientes, se asigna a un servidor para atender la petición.
             \begin{figure}[h]
                 \centering
                 \includegraphics[width=.8 \textwidth]{3d}
-                \caption{}
+                \caption{Para un solo cliente }
                 \label{fig:3d}
             \end{figure}
 
@@ -153,6 +152,172 @@ Transporte del Modelo TCP/IP}	% Titulo del trabajo.
             Es indistinto si hay uno como si hay varios.
 
             argumentar argumentar argumentar argumentar argumentar argumentar argumentar argumentar argumentar argumentar argumentar argumentar argumentar argumentar argumentar argumentar argumentar argumentar argumentar argumentar argumentar argumentar argumentar argumentar argumentar argumentar argumentar argumentar argumentar argumentar argumentar argumentar argumentar argumentar argumentar argumentar argumentar argumentar argumentar argumentar 
+
+        \item Fueron necesarios 8 segmentos TCP durante la comunicación.
+            % enumerar para qué cada uno
+
+            \begin{figure}[h]
+                \centering
+                \includegraphics[width=1 \textwidth]{3e}
+                \caption{Captura del tráfico de una solicitud.}
+                \label{fig:3e}
+            \end{figure}
+
+            La comunicación tardó 1,2\,ms en finalizar.
+            En ella se negociaron el tamaño máximo de segmento (65476 bytes), se habilitó \textit{SACK} para reconocer paquetes no consecutivos, y el escalado de la ventana (factor de 10), y se definió una marca temporal.
+            Como se indica en la figura~\ref{fig:3e} columna \textit{Info} opción \textit{Win}, el tamaño de la ventana indicado por el cliente es de 65476 bytes, el servidor indica 65464 bytes, y el cliente termina el handshake con 65464 bytes.
+            La conexión HTTP/2, es persistente de manera predeterminada, por lo que la aplicación lo sería.
+            Como el cliente solo envía una petición, y cierra la conexión, no persiste en el tiempo, y es el primero en enviar el segmento \textit{FIN}.
+            El servidor sin embargo permanece encendido esperando conexiones.
+
+
+        \item Se identifican 6 streams HTTP/2
+            En la columna \textit{Info} de la imagen~\ref{fig:3f}, se listan separados por coma los siguientes:
+            \begin{itemize}
+                \item DATA
+                \item MAGIC
+                \item SETTINGS
+                \item WINDOW\_UPDATE
+                \item HEADERS
+                \item PING
+            \end{itemize}
+
+            Para la comnunicación y configuración de ésta se utiliza el ID 0, mientras que para los streams HEADERS, DATA, y WINDOW\_UPDATE se utiliza el ID 1.
+
+            \begin{figure}[h]
+                \centering
+                \includegraphics[width=0.8 \textwidth]{3f}
+
+                \vspace{1em}
+                \includegraphics[width=0.8 \textwidth]{3f_2}
+                \caption{Capturas de los streams HTTP/2.}
+                \label{fig:3f}
+            \end{figure}
+
+            Se observa que en tanto en las imágenes~\ref{fig:3f}, son visibles el texto del stream MAGIC, como los headers del stream HEADERS, son visibles.
+            A diferencia de los métodos POST y GET de HTTP/1, HTTP/2 envía las peticiones en binario.
+            Además, las conexiones son persistentes por defecto, mientras que en HTTP/1 se cierran al recibir la respuesta.
+    \end{enumerate}
+\end{problem}
+
+\begin{problem}
+    \begin{figure}[b]
+        \centering
+        \includegraphics[width=0.5 \textwidth]{4}
+        \caption{Captura de consulta simple en dos hosts diferentes en la misma LAN.}
+        \label{fig:4}
+    \end{figure}
+
+    Se repitió el ensayo de una consulta simple, cambiando la dirección IP de localhost a la ip asignada a la interfaz WIFI.
+    En la figura~\ref{fig:4} se observa que el RTT al negociar los parámetros es de 4\,ms, mientras que en la figura~\ref{fig:3e} se ve observa que el RTT al inicio es de 11\,$\mu$s
+
+
+    En loopback, dado que es la misma máquina, no hay casi retardos de propagación, y el procesamiento es la única causa de la demora.
+
+    Por otro lado, en la red física, los paquetes que salen de la estación hacia el router, deben pasar a través de un adaptador USB, y luego pasar a través de otro adaptador USB hacia la estación destino.
+    Además de ser un camino más largo, también está el tráfico de la red, si hay mucho tráfico, incrementa el retardo de propagación de los paquetes.
+    Finalmente también agrega el procesamiento de la aplicación.
+    
+\end{problem}
+
+\begin{problem}
+    \begin{enumerate}[label=\alph*)]
+        \item Los ID de stream adoptan valores de 0 a 199. pero solo tomando impares, ya que son peticiones iniciadas por el cliente.
+            gRPC, es quien asigna el ID dinámicamente un stream ID mientras utilice el mismo socket TCP.
+            % De esta forma el server puede re
+            Se observa que el server al responder a una petición, utiliza el mismo stream ID que el cliente que la generó, para los streams DATA, HEADERS, pero WINDOW\_UPDATE 0.
+            La salida del programa es
+
+            \texttt {
+                --- Estadísticas RTT ---\\
+                Cantidad total de requests: 100\\
+                Errores: 0\\
+                RTT medio (exitosos): 100.533 ms\\
+                Desvío estándar: 0.353 ms
+            }
+
+        \item Para ejecutar las 100 consultas, se necesitó un socket de escucha en el servidor para aceptar conexiones, un socket del cliente para realizar las peticiones, y un socket en el servidor para enviar los datos.
+            Puede decirse que las transacciones siguen un patrón concurrente ya que HTTP/2 garantiza concurrencia gracias a la multiplexación de streams.
+
+            \texttt {
+            --- Estadísticas RTT ---
+            \\ Cantidad total de requests: 100
+            \\ Errores: 0
+            \\ RTT medio (exitosos): 105.810 ms
+            \\ Desvío estándar: 3.503 ms
+            }
+
+            El desvío estándar aumentó hasta 3.5\,ms pese a estar en una misma máquina.
+            Aúnque el delay jitter está configurado en 0, tanto el delay inducido como factores externos a la aplicación pueden variar el desvío de los datos, por lo que es consistente con el valor nulo del delay jitter.
+            Las respuestas tienden a estar ordenadas.
+            En pocos paquetes ocurre que una petición con un stream ID correspondiente mayor que otro se atienda después.
+
+            Los 100 milisegundos de delay, se reflejan en la reducción de segmentos TCP enviados, ya que validaron paquetes con menos frecuencia.
+            Existe un RTT no despreciable, ya que al ser un protocolo fiable, TCP debe ordenar los segmentos que lleguen, y además realizar las validaciones correspondientes para cada uno.
+
+            Otro contexto donde se percibe delay en la internet global, es cuando hay mucho tráfico en la misma red, o cuando se caen muchos enlaces por fallas en el servicio.
+
+        \item El orden ya no se mantiene y además la desviación estándar aumenta considerablemente.
+
+            \begin{figure}[b]
+                \centering
+                \includegraphics[width=0.8 \textwidth]{5c}
+                \caption{}
+                \label{fig:5c}
+            \end{figure}
+
+            \texttt{
+                --- Estadísticas RTT ---
+                \\Cantidad total de requests: 100
+                \\Errores: 0
+                \\RTT medio (exitosos): 113.279 ms
+                \\Desvío estándar: 54.006 ms
+            }
+
+            Un caso en el internet es en las videollamadas o streaming de video en vivo donde la voz llega con cortes en  algunos casos porque los paquetes de audio no llegan a intervalos regulares.
+
+
+        \item Se observa que los paquetes con error tienen el código de error \textit{13: INTERNAL}.
+            Los que no tuvieron errores recibieron un \textit{0: OK}.
+            Además de estos, cuenta con los siguientes:
+
+            \begin{enumerate}[label=\arabic*:]
+                \item OK	0
+                \item CANCELLED	1
+                \item UNKNOWN	2
+                \item INVALID\_ARGUMENT	
+                \item DEADLINE\_EXCEEDED	
+                \item NOT\_FOUND	5
+                \item ALREADY\_EXISTS	6
+                \item PERMISSION\_DENIED	7
+                \item RESOURCE\_EXHAUSTED 8
+                \item FAILED\_PRECONDITION	9
+                \item ABORTED	10
+                \item OUT\_OF\_RANGE	11	
+                \item UNIMPLEMENTED	12	
+                \item INTERNAL	13
+                \item UNAVAILABLE	14
+                \item DATA\_LOSS	15
+                \item UNAUTHENTICATED	16
+            \end{enumerate}
+
+            \begin{figure}[h]
+                \centering
+                \includegraphics[width=0.8 \textwidth]{5d}
+                \caption{Captura de comunicación con 20\% de error.}
+                \label{fig:5d}
+
+            \end{figure}
+            \texttt{
+                --- Estadísticas RTT ---
+                \\Cantidad total de requests: 100
+                \\Errores: 20
+                \\RTT medio (exitosos): 98.698 ms
+                \\Desvío estándar: 59.614 ms
+            }
+
+            Como se puede ver en la imagen~\ref{fig:5d}, todas las peticiones fueron respondidas con un statuscode 200.
+            Es decir, que el servicio gRPC haya tenido un error, no implica un error en HTTP/2.
     \end{enumerate}
 \end{problem}
 
